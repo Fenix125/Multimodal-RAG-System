@@ -12,10 +12,8 @@ load_dotenv(".env.example", override=False)
 def determine_device():
     device = "cpu"
     if torch.cuda.is_available():
-        print("CUDA is available! Using GPU.")
         device = torch.device("cuda")
     elif torch.backends.mps.is_available():
-        print("MPS is available. Using MPS.")
         device = torch.device("mps")
     return device
 
@@ -42,6 +40,18 @@ class AppConfig:
         )
     )
     device: str = determine_device()
+    
+    google_ai_api_key: str = field(
+        default_factory=lambda: os.getenv(
+            "GOOGLE_AI_API_KEY",
+            None,
+        )
+    )
+    gemini_model_name: str = field(
+        default_factory=lambda: os.getenv(
+            "GEMINI_MODEL",
+            "gemini-2.5-flash",
+        )
+    )
 
 config = AppConfig()
-

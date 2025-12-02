@@ -20,14 +20,13 @@ class ImageEmbedder:
     Works with:
       - "openai/clip-vit-base-patch32"
       - "openai/clip-vit-base-patch16"
-      - "google/siglip-base-patch16-224"
     """
 
     def __init__(self, model_name: str, device: str = "cpu") -> None:
         self.model_name = model_name
         self.device = device
 
-        self.processor = AutoProcessor.from_pretrained(self.model_name)
+        self.processor = AutoProcessor.from_pretrained(self.model_name, use_fast=False)
         self.model = AutoModel.from_pretrained(self.model_name)
         self.model.to(self.device)
         self.model.eval()
