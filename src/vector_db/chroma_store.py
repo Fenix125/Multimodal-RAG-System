@@ -195,6 +195,38 @@ class TheBatchChromaIndexer:
             )
         return hits
     
+    def search_images_by_image(self, image_path: str, k: int = 4):
+        """
+        Similarity search over image embeddings, using a provided image
+        """
+        if not image_path:
+            return []
+
+        query_emb = self.clip_embedder.embed_images_to_list([image_path])
+
+        results = self.article_images.query(
+            query_embeddings=query_emb,
+            n_results=k,
+            include=["metadatas", "distances"],
+        )
+
+        hits = []
+        ids_list = results.get("ids", [[]])[0]
+        metas_list = results.get("metadatas", [[]])[0]
+        dists_list = results.get("distances", [[]])[0]
+
+        for idd, meta, dist in zip(ids_list, metas_list, dists_list):
+            hits.append(
+                {
+                    "source": "image",
+                    "id": idd,
+                    "distance": dist,
+                    "document": None,
+                    "metadata": meta,
+                }
+            )
+        return hits
+    
     def search_multimodal(self, text_query: str, image_query = None, k_text: int = 4, k_image: int = 4) -> List[Dict[str, Any]]:
         """
         Combined search:

@@ -88,7 +88,7 @@ def extract_articles_from_intermediate_steps(intermediate_steps):
         action, result = step
 
         tool_name = getattr(action, "tool", None)
-        if tool_name != "the_batch_multimodal_search":
+        if tool_name not in {"the_batch_multimodal_search", "image_search"}:
             continue
 
         payload = result
@@ -301,8 +301,18 @@ def main():
     if section == "Chat":
         for msg in st.session_state.messages:
             render_message(msg)
+            
+        with st.sidebar:
+            st.markdown("**Attachment**")
+            uploaded_img = st.file_uploader(
+                "📎 Image",
+                type=["png", "jpg", "jpeg"],
+                label_visibility="collapsed",
+            )
+        user_input = st.chat_input("Ask about AI news…")
+        
+        image_path = None
 
-        user_input = st.chat_input("Ask about AI news, robotics, agents, etc.")
         if user_input:
             st.session_state.messages.append(
                 {"role": "user", "content": user_input, "articles": []}
@@ -312,8 +322,20 @@ def main():
 
             with st.chat_message("assistant"):
                 with st.spinner("Thinking..."):
+                    combined_input = user_input
+
+                    if uploaded_img:
+                        uploads_dir = Path("data/uploads")
+                        uploads_dir.mkdir(parents=True, exist_ok=True)
+                        image_path = uploads_dir / uploaded_img.name
+                        with open(image_path, "wb") as f:
+                            f.write(uploaded_img.getbuffer())
+                        st.image(str(image_path), caption="Query image", use_column_width=True)
+
+                        combined_input = f"{user_input}\n[Image path]: {image_path}"
+
                     res = agent.invoke(
-                        {"input": user_input},
+                        {"input": combined_input},
                         config={"configurable": {"session_id": st.session_state.session_id}},
                     )
 

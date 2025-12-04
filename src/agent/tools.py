@@ -65,11 +65,8 @@ def make_multimodal_search_tool(indexer):
             min_distance = r.get("min_distance")
             score = None
             if min_distance is not None:
-                try:
-                    score = 1.0 / (1.0 + float(min_distance))
-                except (TypeError, ValueError):
-                    score = None
-
+                score = 1.0 / (1.0 + float(min_distance))
+      
             image_urls = r.get("image_urls") or []
             image_alts = r.get("image_alts") or []
             if image_alts and len(image_alts) < len(image_urls):
@@ -102,3 +99,48 @@ def make_multimodal_search_tool(indexer):
 
         return json.dumps(payload)
     return the_batch_multimodal_search
+
+def make_image_search_tool(indexer):
+    @tool
+    def image_search(image_path: str) -> str:
+        """
+        Search image index using a local image file path.
+        Args:
+            image_path: path to a local image file.
+        Returns:
+            JSON string with 'query' info and 'results' list.
+        """
+        if not image_path:
+            return json.dumps({"query": {"image_path": image_path}, "results": [], "message": "No image provided."})
+
+        hits = indexer.search_images_by_image(image_path=image_path)
+        if not hits:
+            return json.dumps({"query": {"image_path": image_path}, "results": [], "message": "No matching images found."})
+
+        combined = []
+        for h in hits:
+            meta = h.get("metadata") or {}
+            min_dist = h.get("distance")
+            score = None
+            if min_dist is not None:
+                score = 1.0 / (1.0 + float(min_dist))
+      
+            img_url = meta.get("image_url")
+            img_alt = meta.get("image_alt")
+            combined.append(
+                {
+                    "article_id": meta.get("article_id"),
+                    "title": meta.get("title") or "(untitled article)",
+                    "url": meta.get("url"),
+                    "topic": meta.get("primary_topic"),
+                    "published_at": meta.get("published_at"),
+                    "sources": ["image"],
+                    "text_snippets": [],
+                    "image_urls": [img_url] if img_url else [],
+                    "image_alts": [img_alt] if img_alt else [],
+                    "score": score,
+                }
+            )
+
+        return json.dumps({"query": {"image_path": image_path}, "results": combined})
+    return image_search

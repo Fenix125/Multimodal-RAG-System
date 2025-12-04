@@ -15,7 +15,7 @@ from src.embeddings.image_embedder import ImageEmbedder
 from src.vector_db.chroma_store import TheBatchChromaIndexer
 
 from src.agent.prompt import SYSTEM_PROMPT
-from src.agent.tools import make_multimodal_search_tool
+from src.agent.tools import make_multimodal_search_tool, make_image_search_tool
 
 HISTORY_STORE: Dict[str, InMemoryChatMessageHistory] = {}
 
@@ -47,7 +47,7 @@ def build_the_batch_agent() -> RunnableWithMessageHistory:
         clip_embedder=clip_embedder,
     )
 
-    tools = [make_multimodal_search_tool(indexer)]
+    tools = [make_multimodal_search_tool(indexer), make_image_search_tool(indexer)]
 
     llm = ChatGoogleGenerativeAI(
         model=config.gemini_model_name,
