@@ -20,6 +20,8 @@ async def main() -> None:
         )
         print("[ASSISTANT] > ", res["output"])
         print()
+        #-------
+        print("[DEBUG]", res["intermediate_steps"])
 
 if __name__ == "__main__":
     asyncio.run(main())

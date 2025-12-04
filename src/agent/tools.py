@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from typing import List, Optional
 from langchain_core.tools import tool
 
@@ -8,62 +9,96 @@ def make_multimodal_search_tool(indexer):
     Makes multimodal search tool using provided indexer
     """
     @tool
-    def the_batch_multimodal_search(text_query: str, image_query: Optional[str] = None, k_text: int = 4, k_image: int = 4) -> str:
+    def the_batch_multimodal_search(text_query: str, image_query: Optional[str] = None) -> str:
         """
-        Search The Batch vector index.
+        Search The Batch vector index and return structured JSON.
 
         Args:
-            text_query: natural language question
-            image_query: OPTIONAL short text description for images (e.g. "robot", "conference audience", "Andrew Ng").
-            k_text: how many text chunks to retrieve.
-            k_image: how many images to retrieve.
+            text_query: natural language question.
+            image_query: short text description for images
+                (e.g. "robot", "conference audience", "Andrew Ng").
 
         Returns:
-            A human-readable summary of the most relevant articles,
-            including snippets and image URLs.
+            JSON string with the query context and a 'results' list of articles
+            and images that match, JSON structured like:
+            {
+                "query": {"text": "...", "image": "..."},
+                "results": [
+                    {
+                        "article_id": "...",
+                        "title": "...",
+                        "url": "...",
+                        "topic": "...",
+                        "published_at": "...",
+                        "sources": ["text", "image"],
+                        "text_snippets": ["..."],
+                        "image_urls": ["..."],
+                        "image_alts": ["..."],
+                        "score": 0.0
+                    }
+                ]
+            }
         """
+        query_payload = {"text": text_query, "image": image_query}
+
         if not text_query and not image_query:
-            return "No text query provided."
+            return json.dumps(
+                {"query": query_payload, "results": [], "message": "No query provided."}
+            )
 
         results = indexer.search_multimodal(
             text_query=text_query,
-            image_query=image_query,
-            k_text=k_text,
-            k_image=k_image,
+            image_query=image_query
         )
 
         if not results:
-            return "No relevant articles found in The Batch news."
+            return json.dumps(
+                {
+                    "query": query_payload,
+                    "results": [],
+                    "message": "No relevant articles found in The Batch news.",
+                }
+            )
 
-        lines: List[str] = []
-        for idx, r in enumerate(results, start=1):
-            title = r.get("title") or "(untitled article)"
-            url = r.get("url") or "N/A"
-            published = r.get("published_at") or "unknown date"
-            sources = ", ".join(sorted(r.get("sources", []))) or "text"
-
-            header = f"{idx}. {title}\n Published: {published}\n Topic: {r.get("primary_topic")}\n URL: {url}\n Sources: {sources}"
-
-            snippet_lines: List[str] = []
-            text_snippets = r.get("text_snippets") or []
-            if text_snippets:
-                for s_idx, s in enumerate(text_snippets[:3], start=1):
-                    snippet_lines.append(f"   [text snippet {s_idx}] {s}")
+        articles: List[dict] = []
+        for r in results:
+            min_distance = r.get("min_distance")
+            score = None
+            if min_distance is not None:
+                try:
+                    score = 1.0 / (1.0 + float(min_distance))
+                except (TypeError, ValueError):
+                    score = None
 
             image_urls = r.get("image_urls") or []
             image_alts = r.get("image_alts") or []
-            if image_urls:
-                snippet_lines.append(" Images:")
-                for u, alt in zip(image_urls, image_alts):
-                    if alt:
-                        snippet_lines.append(f"     - {u}  (alt: {alt})")
-                    else:
-                        snippet_lines.append(f"     - {u}")
+            if image_alts and len(image_alts) < len(image_urls):
+                image_alts = image_alts + [None] * (len(image_urls) - len(image_alts))
+            elif not image_alts:
+                image_alts = [None] * len(image_urls)
 
-            if snippet_lines:
-                lines.append(header + "\n" + "\n".join(snippet_lines))
-            else:
-                lines.append(header)
+            sources = sorted(r.get("sources") or [])
+            text_snippets = (r.get("text_snippets") or [])[:3]
 
-        return "\n\n".join(lines)
+            articles.append(
+                {
+                    "article_id": r.get("article_id"),
+                    "title": r.get("title"),
+                    "url": r.get("url"),
+                    "topic": r.get("primary_topic"),
+                    "published_at": r.get("published_at"),
+                    "sources": sources,
+                    "text_snippets": text_snippets,
+                    "image_urls": image_urls,
+                    "image_alts": image_alts,
+                    "score": score,
+                }
+            )
+
+        payload = {
+            "query": query_payload,
+            "results": articles,
+        }
+
+        return json.dumps(payload)
     return the_batch_multimodal_search

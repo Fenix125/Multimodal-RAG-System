@@ -13,16 +13,18 @@ from src.embeddings.image_embedder import ImageEmbedder
 
 
 class TheBatchChromaIndexer:
-    def __init__(self, text_embedder: TextEmbedder, clip_embedder: ImageEmbedder, chunk_size : int = 1024, overlap: int = 512):
+    def __init__(self, text_embedder: TextEmbedder, clip_embedder: ImageEmbedder, chunk_size : int = 1024, overlap: int = 256):
         self.client = chromadb.PersistentClient(path=config.chroma_path)
         self.text_embedder = text_embedder
         self.clip_embedder = clip_embedder
 
         self.articles_text = self.client.get_or_create_collection(
-            name="the_batch_articles_text"
+            name="the_batch_articles_text",
+            metadata={"hnsw:space": "cosine"},
         )
         self.article_images = self.client.get_or_create_collection(
-            name="the_batch_article_images"
+            name="the_batch_article_images",
+            metadata={"hnsw:space": "cosine"},
         )
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size,
@@ -35,7 +37,7 @@ class TheBatchChromaIndexer:
         Common metadata used for both text chunks and images.
         """
         hero_image_url = art.images[0].url if art.images and art.images[0].url else None
-
+        
         return {
             "article_id": art.article_id,
             "title": art.title,
@@ -238,8 +240,8 @@ class TheBatchChromaIndexer:
                     entry["text_snippets"].append(hit["document"])
 
             if hit["source"] == "image":
-                img_url = meta.get("image_url") or meta.get("hero_image_url")
-                img_alt = meta.get("image_alt") or meta.get("hero_image_alt")
+                img_url = meta.get("image_url")
+                img_alt = meta.get("image_alt")
             else:
                 img_url = meta.get("hero_image_url")
                 img_alt = meta.get("hero_image_alt")
