@@ -1,15 +1,86 @@
 import uuid
 import json
+import subprocess
+import sys
+from pathlib import Path
 
 import streamlit as st
 
 from src.agent.agent import build_the_batch_agent
 
 
+def run_fetch_and_ingest():
+    """
+    Fetch latest articles, ingest into Chroma, and clean up processed data.
+    """
+    try:
+        from src.the_batch.ingestor import TheBatchIngestor
+        from src.scripts.ingest_chroma_db import load_articles_from_jsonl
+        from src.config import config
+        from src.embeddings.text_embedder import TextEmbedder
+        from src.embeddings.image_embedder import ImageEmbedder
+        from src.vector_db.chroma_store import TheBatchChromaIndexer
+    except Exception as e:
+        st.error(f"Failed to import ingestion dependencies: {e}")
+        return
+
+    output_path = Path("data/processed/the_batch_articles.jsonl")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    topics = ["letters", "data-points", "research", "business", "science", "culture", "hardware"]
+
+    try:
+        with st.spinner("Fetching latest articles..."):
+            ingestor = TheBatchIngestor()
+            ingestor.ingest_all_topics(topics=topics, output_jsonl=output_path)
+    except Exception as e:
+        st.error(f"Fetch failed: {e}")
+        return
+
+    try:
+        with st.spinner("Indexing articles into Chroma..."):
+            articles = load_articles_from_jsonl(output_path)
+            if not articles:
+                st.warning("No articles loaded; skipping indexing.")
+                return
+
+            text_embedder = TextEmbedder(
+                model_name=config.text_embed_model_name,
+                device=config.device,
+            )
+            clip_embedder = ImageEmbedder(
+                model_name=config.clip_model_name,
+                device=config.device,
+            )
+            indexer = TheBatchChromaIndexer(
+                text_embedder=text_embedder,
+                clip_embedder=clip_embedder,
+            )
+            indexer.index(articles)
+    except Exception as e:
+        st.error(f"Ingestion failed: {e}")
+        return
+    finally:
+        try:
+            if output_path.exists():
+                output_path.unlink()
+            if output_path.parent.exists() and not any(output_path.parent.iterdir()):
+                output_path.parent.rmdir()
+        except Exception as cleanup_err:
+            st.warning(f"Cleanup skipped: {cleanup_err}")
+
+    st.success("Fetched, indexed, and cleaned up processed data.")
+
+
+def set_section(name: str):
+    st.session_state.section = name
+
+
 def extract_articles_from_intermediate_steps(intermediate_steps):
     """
     Pulls article results from the the_batch_multimodal_search tool calls.
     """
+    collected = []
+
     for step in intermediate_steps:
         if not isinstance(step, (list, tuple)) or len(step) != 2:
             continue
@@ -34,9 +105,9 @@ def extract_articles_from_intermediate_steps(intermediate_steps):
         else:
             article_list = []
         
-        return article_list
+        collected.extend(article_list)
 
-    return []
+    return collected
 
 
 def render_article_card(art):
@@ -167,6 +238,38 @@ def render_message(msg):
             render_articles_section(articles, section_title="Sources used in this answer")
 
 
+def render_settings_section():
+    """
+    Settings tab: fetch and ingest latest articles with double confirmation.
+    """
+    st.subheader("Settings")
+    st.caption("Fetch latest articles, index them into database")
+
+    if "confirm_fetch" not in st.session_state:
+        st.session_state.confirm_fetch = False
+
+    if not st.session_state.confirm_fetch:
+        if st.button("Fetch articles", type="primary"):
+            st.session_state.confirm_fetch = True
+            st.rerun()
+    else:
+        st.warning(
+            "This will download the latest articles, re-index the database"
+        )
+        col_proceed, col_cancel = st.columns([1, 1])
+        with col_proceed:
+            proceed = st.button("Yes, fetch & ingest", type="primary", use_container_width=True)
+        with col_cancel:
+            cancel = st.button("Cancel", use_container_width=True)
+        
+        if proceed:
+            run_fetch_and_ingest()
+            st.session_state.confirm_fetch = False
+        if cancel:
+            st.session_state.confirm_fetch = False
+            st.rerun()
+
+
 def main():
     st.set_page_config(page_title="Multimodal RAG System", page_icon="", layout="wide")
     st.title("Multimodal RAG System")
@@ -174,32 +277,56 @@ def main():
     init_session()
     agent = init_agent()
 
-    for msg in st.session_state.messages:
-        render_message(msg)
+    if "section" not in st.session_state:
+        st.session_state.section = "Chat"
 
-    user_input = st.chat_input("Ask about AI news, robotics, agents, etc.")
-    if user_input:
-        st.session_state.messages.append(
-            {"role": "user", "content": user_input, "articles": []}
-        )
-        with st.chat_message("user"):
-            st.markdown(user_input)
+    st.sidebar.markdown("### Sections")
+    st.sidebar.button(
+        "Chat",
+        use_container_width=True,
+        type="primary" if st.session_state.section == "Chat" else "secondary",
+        on_click=set_section,
+        args=("Chat",),
+    )
+    st.sidebar.button(
+        "Settings",
+        use_container_width=True,
+        type="primary" if st.session_state.section == "Settings" else "secondary",
+        on_click=set_section,
+        args=("Settings",),
+    )
 
-        with st.chat_message("assistant"):
-            with st.spinner("Thinking..."):
-                res = agent.invoke(
-                    {"input": user_input},
-                    config={"configurable": {"session_id": st.session_state.session_id}},
-                )
+    section = st.session_state.section
 
-        output_text = res.get("output", "(no output)")
-        intermediate_steps = res.get("intermediate_steps", [])
-        articles = extract_articles_from_intermediate_steps(intermediate_steps)
+    if section == "Chat":
+        for msg in st.session_state.messages:
+            render_message(msg)
 
-        st.session_state.messages.append(
-            {"role": "assistant", "content": output_text, "articles": articles}
-        )
-        st.rerun()
+        user_input = st.chat_input("Ask about AI news, robotics, agents, etc.")
+        if user_input:
+            st.session_state.messages.append(
+                {"role": "user", "content": user_input, "articles": []}
+            )
+            with st.chat_message("user"):
+                st.markdown(user_input)
+
+            with st.chat_message("assistant"):
+                with st.spinner("Thinking..."):
+                    res = agent.invoke(
+                        {"input": user_input},
+                        config={"configurable": {"session_id": st.session_state.session_id}},
+                    )
+
+            output_text = res.get("output", "(no output)")
+            intermediate_steps = res.get("intermediate_steps", [])
+            articles = extract_articles_from_intermediate_steps(intermediate_steps)
+
+            st.session_state.messages.append(
+                {"role": "assistant", "content": output_text, "articles": articles}
+            )
+            st.rerun()
+    elif section == "Settings":
+        render_settings_section()
 
 
 if __name__ == "__main__":
