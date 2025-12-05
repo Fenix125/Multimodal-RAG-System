@@ -267,7 +267,7 @@ def render_settings_section():
             st.session_state.confirm_fetch = False
         if cancel:
             st.session_state.confirm_fetch = False
-            st.rerun()
+        st.rerun()
 
 
 def main():

@@ -8,8 +8,7 @@ from urllib.parse import urlparse
 import requests
 from PIL import Image
 from transformers import AutoProcessor, AutoModel
-
-ImageInput = Union[Image.Image, str]
+from src.the_batch.templates import ImageMeta
 
 class ImageEmbedder:
     """
@@ -31,15 +30,6 @@ class ImageEmbedder:
         self.model.to(self.device)
         self.model.eval()
 
-    def ensure_image_list(self, images: Union[ImageInput, List[ImageInput]]) -> List[ImageInput]:
-        if isinstance(images, list):
-            return images
-        return [images]
-
-    def ensure_text_list(self, texts: Union[str, List[str]]) -> List[str]:
-        if isinstance(texts, str):
-            return [texts]
-        return list(texts)
 
     def is_url(self, path: str) -> bool:
         try:
@@ -53,32 +43,46 @@ class ImageEmbedder:
         resp.raise_for_status()
         return Image.open(BytesIO(resp.content)).convert("RGB")
     
-    def to_pil(self, image: ImageInput) -> Image.Image:
-        """
-        Accepts:
-          - PIL.Image.Image -> returns as is
-          - str (URL) -> fetch via HTTP and open
-          - str (file path) -> open local file
-        """
-        if isinstance(image, Image.Image):
-            return image
+    def to_pil(self, image_url) -> Image.Image:
+        if isinstance(image_url, str) and self.is_url(image_url):
+            return self.load_image_from_url(image_url)
 
-        if isinstance(image, str) and self.is_url(image):
-            return self.load_image_from_url(image)
-
-        return Image.open(image).convert("RGB")
+        return Image.open(image_url).convert("RGB")
     
-
+    def ensure_text_list(self, texts: Union[str, List[str]]) -> List[str]:
+        if isinstance(texts, str):
+            return [texts]
+        return list(texts)
+    
     @torch.no_grad()
-    def embed_images(self, images: Union[ImageInput, List[ImageInput]]) -> torch.Tensor:
+    def embed_images_with_alt(self, image_meta) -> torch.Tensor:
         """
         Returns a (B, D) tensor of L2-normalized image embeddings.
         """
-        img_list = self.ensure_image_list(images)
-        pil_images = [self.to_pil(im) for im in img_list]
+        pil_images = [self.to_pil(meta["image_url"]) for meta in image_meta]
+        img_inputs = self.processor(images=pil_images, return_tensors="pt").to(self.device)
+        image_features = self.model.get_image_features(**img_inputs)
+
+        alt_texts = [meta.get("image_alt", "") for meta in image_meta]
+        alt_inputs = self.processor(text=alt_texts, padding=True, return_tensors="pt").to(self.device)
+        alt_features = self.model.get_text_features(**alt_inputs)
+
+        combined = (image_features + alt_features) / 2.0
+        combined = F.normalize(combined, p=2, dim=-1)
+
+        return combined
+    
+
+    @torch.no_grad()
+    def embed_images(self, images_meta) -> torch.Tensor:
+        """
+        Returns a (B, D) tensor of L2-normalized image embeddings.
+        """
+        pil_images = [self.to_pil(meta.get("image_url")) for meta in images_meta]
 
         inputs = self.processor(images=pil_images, return_tensors="pt").to(self.device)
         image_features = self.model.get_image_features(**inputs)
+        
         image_features = F.normalize(image_features, p=2, dim=-1)
         return image_features
 
@@ -94,8 +98,12 @@ class ImageEmbedder:
         text_features = F.normalize(text_features, p=2, dim=-1)
         return text_features
 
-    def embed_images_to_list(self, images: Union[ImageInput, List[ImageInput]]) -> List[List[float]]:
-        return self.embed_images(images).cpu().tolist()
+    def embed_images_to_list(self, images_meta, use_alt=False) -> List[List[float]]:
+        if use_alt:
+            print("[INFO] Embedding images with alternative names")
+            return self.embed_images_with_alt(images_meta).cpu().tolist()
+        else:
+            return self.embed_images(images_meta).cpu().tolist()
 
     def embed_texts_to_list(self, texts: Union[str, List[str]]) -> List[List[float]]:
         return self.embed_texts(texts).cpu().tolist()

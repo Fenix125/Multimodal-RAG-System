@@ -27,6 +27,9 @@ def clean_html_fragment_to_text(html_fragment: str) -> str:
     for tag in soup(["script", "style"]):
         tag.decompose()
 
+    for katex in soup.select("span.katex"):
+        katex.replace_with(katex.get_text(separator="", strip=True))
+
     text = soup.get_text(separator="\n")
     
     text = re.sub(r"\r\n", "\n", text)
@@ -68,14 +71,14 @@ class TheBatchIngestor:
         - flatten single newlines inside paragraphs to spaces
           while preserving paragraph breaks (double newlines).
         """
-        AUDIO_INTRO_RE = re.compile(
+        audio_intro = re.compile(
             r"^Loading the\s+Elevenlabs Text to Speech\s+AudioNative Player\.\.\.\s*",
             flags=re.IGNORECASE | re.MULTILINE,
         )
 
         text = clean_html_fragment_to_text(body_html)
 
-        text = re.sub(AUDIO_INTRO_RE, "", text, count=1).lstrip()
+        text = re.sub(audio_intro, "", text, count=1).lstrip()
 
         paragraphs = text.split("\n\n")
 

@@ -59,7 +59,6 @@ class TheBatchChromaIndexer:
         text_metadatas: List[Dict[str, Any]] = []
 
         image_ids: List[str] = []
-        image_urls: List[str] = []
         image_metadatas: List[Dict[str, Any]] = []
 
         for art in articles:
@@ -91,7 +90,6 @@ class TheBatchChromaIndexer:
                 image_id = img.image_id or f"{art.article_id}::image::{len(image_ids)}"
 
                 image_ids.append(image_id)
-                image_urls.append(img.url)
 
                 meta = dict(base_meta)
                 meta.update(
@@ -118,8 +116,8 @@ class TheBatchChromaIndexer:
             print("[INFO] No text chunks to index.")
 
         if image_ids:
-            print(f"[INFO] Embedding {len(image_urls)} images...")
-            image_embeddings = self.clip_embedder.embed_images_to_list(image_urls)
+            print(f"[INFO] Embedding {len(image_metadatas)} images...")
+            image_embeddings = self.clip_embedder.embed_images_to_list(image_metadatas, use_alt=True)
 
             print("[INFO] Adding images to Chroma collection 'the_batch_article_images'...")
             self.article_images.add(
@@ -204,7 +202,8 @@ class TheBatchChromaIndexer:
         if not image_path:
             return []
 
-        query_emb = self.clip_embedder.embed_images_to_list([image_path])
+        image_meta = {"image_url" : image_path}
+        query_emb = self.clip_embedder.embed_images_to_list([image_meta])
 
         results = self.article_images.query(
             query_embeddings=query_emb,
