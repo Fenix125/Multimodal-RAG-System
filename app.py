@@ -174,9 +174,9 @@ def render_article_card(art):
             if meta_bits:
                 st.markdown(" • ".join(meta_bits))
 
-            if text_snippets and is_text_match:
+            if text_snippets:
                 st.markdown("**Relevant snippets:**")
-                for snippet in text_snippets[:3]:
+                for snippet in text_snippets:
                     st.markdown(f"> {snippet}")
 
             if is_image_match:
@@ -301,7 +301,7 @@ def main():
     if section == "Chat":
         for msg in st.session_state.messages:
             render_message(msg)
-            
+
         with st.sidebar:
             st.markdown("**Attachment**")
             uploaded_img = st.file_uploader(
@@ -330,8 +330,6 @@ def main():
                         image_path = uploads_dir / uploaded_img.name
                         with open(image_path, "wb") as f:
                             f.write(uploaded_img.getbuffer())
-                        st.image(str(image_path), caption="Query image", use_column_width=True)
-
                         combined_input = f"{user_input}\n[Image path]: {image_path}"
 
                     res = agent.invoke(

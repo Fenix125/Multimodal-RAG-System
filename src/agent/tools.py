@@ -75,7 +75,7 @@ def make_multimodal_search_tool(indexer):
                 image_alts = [None] * len(image_urls)
 
             sources = sorted(r.get("sources") or [])
-            text_snippets = (r.get("text_snippets") or [])[:3]
+            text_snippets = r.get("text_snippets") or []
 
             articles.append(
                 {
@@ -124,7 +124,9 @@ def make_image_search_tool(indexer):
             score = None
             if min_dist is not None:
                 score = 1.0 / (1.0 + float(min_dist))
-      
+
+            snippet = indexer.top_text_chunk_for_article(meta.get("article_id"))
+
             img_url = meta.get("image_url")
             img_alt = meta.get("image_alt")
             combined.append(
@@ -135,7 +137,7 @@ def make_image_search_tool(indexer):
                     "topic": meta.get("primary_topic"),
                     "published_at": meta.get("published_at"),
                     "sources": ["image"],
-                    "text_snippets": [],
+                    "text_snippets": [snippet] if snippet else [],
                     "image_urls": [img_url] if img_url else [],
                     "image_alts": [img_alt] if img_alt else [],
                     "score": score,

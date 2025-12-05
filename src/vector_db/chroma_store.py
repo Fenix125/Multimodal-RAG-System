@@ -32,6 +32,8 @@ class TheBatchChromaIndexer:
             separators=["\n\n", "\n", ". ", " "],
         )
 
+
+
     def base_article_metadata(self, art: Article):
         """
         Common metadata used for both text chunks and images.
@@ -137,7 +139,7 @@ class TheBatchChromaIndexer:
         if not query.strip():
             return []
 
-        query_emb = self.text_embedder.embed_documents_to_list([query])
+        query_emb = self.text_embedder.embed_queries_to_list([query])
 
         results = self.articles_text.query(
             query_embeddings=query_emb,
@@ -227,6 +229,27 @@ class TheBatchChromaIndexer:
             )
         return hits
     
+    def top_text_chunk_for_article(self, article_id: str, text_query: str | None = None) -> str | None:
+        if text_query:
+            query_emb = self.text_embedder.embed_queries_to_list([text_query])
+            res = self.articles_text.query(
+                query_embeddings=query_emb,
+                n_results=1,
+                where={"article_id": article_id},
+                include=["documents", "distances"],
+            )
+            docs = res.get("documents", [[]])[0]
+            return docs[0] if docs else None
+
+        res = self.articles_text.get(
+            where={"article_id": article_id},
+            limit=1,
+            include=["documents"],
+        )
+        docs = res.get("documents") or []
+        return docs[0] if docs else None
+
+
     def search_multimodal(self, text_query: str, image_query = None, k_text: int = 4, k_image: int = 4) -> List[Dict[str, Any]]:
         """
         Combined search:
@@ -272,6 +295,10 @@ class TheBatchChromaIndexer:
                     entry["text_snippets"].append(hit["document"])
 
             if hit["source"] == "image":
+                snippet = self.top_text_chunk_for_article(article_id, text_query)
+                if snippet and snippet not in entry["text_snippets"]:
+                    entry["text_snippets"].append(snippet)
+
                 img_url = meta.get("image_url")
                 img_alt = meta.get("image_alt")
             else:
