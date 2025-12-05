@@ -1,0 +1,42 @@
+[
+  {
+    "query": "Do you have any visualizations that compare how people in different countries feel about AI's ability to tackle big problems like poverty or climate change?",
+    "expected_answer": "Yes. There is coverage that includes chart-style visualizations summarizing survey results about what people think AI will do for society. These visuals show how respondents in different countries or demographic groups rate AI’s potential to help with big challenges like poverty, disease, or climate change, and to what extent they fear harms like job loss or misinformation. The takeaway is that attitudes are mixed: many people see real upside for hard problems, but they also carry deep concerns about economic disruption and loss of control, and those mixed feelings vary by region."
+  },
+  {
+    "query": "Show me an overview of how AI-powered coding agents could be used in a cyberattack, ideally with a diagram of the stages involved.",
+    "expected_answer": "Articles on coding agents and security describe a multi-stage pipeline that an attacker could automate. A typical diagram breaks the process into phases like reconnaissance and data gathering, scanning for vulnerabilities, automatically writing or adapting exploit code, testing it in a sandbox, and then deploying attacks at scale. The same pieces—in particular, agents that call external tools and write or run code—can also be used defensively to audit systems, find bugs, and patch them. The main message is that the structure of an automated cyberattack is now clear enough that both attackers and defenders could build agents that walk through the steps with minimal human guidance."
+  },
+  {
+    "query": "Are there examples of generative models that can create editable 3D office or conference-room environments you can walk through?",
+    "expected_answer": "Yes. One line of work focuses on generative world models like Marble that can synthesize persistent 3D environments, such as office or conference-room scenes, from relatively small inputs. These environments can be explored like a virtual space and then edited with tools such as Chisel to change walls, furniture, or lighting while preserving coherence. The key idea is to move beyond single 2D images toward editable, navigable 3D worlds that can be regenerated or adjusted with text prompts or simple interactions."
+  },
+  {
+    "query": "Can you show me any visuals of AI systems tracking hurricanes or cyclones and explain how they improve weather forecasts?",
+    "expected_answer": "Recent work from groups like Google’s weather lab showcases AI models that predict storm tracks and intensity, often illustrated with side-by-side forecast maps comparing AI predictions to traditional numerical weather models. These visuals highlight that the AI system can forecast the path and strength of hurricanes or cyclones several days out with accuracy that rivals or surpasses conventional methods. By learning directly from historical weather data, these models can capture complex patterns in atmosphere dynamics and improve early warnings, especially for fast-developing or rapidly strengthening storms."
+  },
+  {
+    "query": "I want to see how self-driving cars are being tested on U.S. freeways; do you have any pictures of real robotaxis on highways and details of those deployments?",
+    "expected_answer": "Yes. There are articles that describe and illustrate deployments of autonomous cars on selected expressways in California and Arizona. They show robotaxis from companies like Waymo driving on multi-lane highways near city centers or waterfronts, often without a safety driver behind the wheel. The text explains that these services are being rolled out gradually with geofenced routes, detailed mapping, and extensive safety validation, and that regulators and local communities are watching their performance closely as a preview of broader highway autonomy."
+  },
+  {
+    "query": "Are there any articles about AI-powered beehives or robots that help monitor bee colonies, preferably with photos of the hives?",
+    "expected_answer": "Yes. One article covers Beewise’s robotic beehive, a box-like structure equipped with sensors, cameras, and robotic mechanisms that continuously monitor bee colonies. Visuals show stacked frames inside a controlled enclosure, sometimes with robotic arms or rails that move frames around. The system tracks hive health, detects threats like varroa mites or temperature extremes, and can automatically intervene with targeted treatments. The goal is to reduce colony collapse and improve honey yields by giving beekeepers fine-grained, AI-driven insight into what’s happening inside their hives."
+  },
+  {
+    "query": "Can you share an article about Duolingo using AI translation to expand courses, ideally with a visual that shows the owl mascot representing different cultures?",
+    "expected_answer": "There is an article about Duolingo that explains how the company uses AI translation and generation to scale its most popular courses across many language pairs. It often pairs this explanation with graphics of the Duolingo owl and multicultural imagery to emphasize global reach. The core story is that automated translation and content generation allow Duolingo to rapidly spin up new versions of existing course structures, after which human experts review and adapt the material to local norms, so learners in different countries get more consistent and comprehensive offerings."
+  },
+  {
+    "query": "Is there coverage of the Hollywood actors' agreement on generative AI in film and TV, maybe with photos from the SAG-AFTRA picket lines?",
+    "expected_answer": "Yes. The coverage of the Hollywood actors’ deal on generative AI explains how SAG-AFTRA and the studios negotiated rules for scanning performers, creating digital doubles, and using AI-generated likenesses. It emphasizes requirements for informed consent, limits on reuse, and compensation structures when AI replicas are employed. The article is often illustrated with photos from protests and picket lines, underscoring that the agreement came after prolonged strikes and that it will likely serve as a reference point for other entertainment unions negotiating around AI."
+  },
+  {
+    "query": "I'd like an explanation of the current AI investment boom and the risk of a bubble, with any illustrations that help show why the boom could eventually bust.",
+    "expected_answer": "Analysis of the current AI boom points to massive investments in chips, data centers, and high-valuation startups, driven by expectations of transformative productivity gains. Charts and diagrams are used to compare this wave of spending to past technology cycles, highlighting that revenues may lag behind infrastructure outlays. The articles outline scenarios where the market stays hot if AI quickly delivers broad value, versus bubble scenarios where demand stalls or competition squeezes margins, leaving investors overexposed. The key message is that while AI has real long-term potential, there is also a substantial risk of overbuilding and some projects failing to justify their costs."
+  },
+  {
+    "query": "Are there any examples of models that build spatial maps from text instructions like 'put the plate in the dishwasher' so a robot can plan its actions?",
+    "expected_answer": "Yes. Work such as MolmoAct combines vision-language modeling with spatial reasoning to create internal maps of the environment from images and text instructions. Given a command like “put the plate in the dishwasher,” the model infers where the plate and dishwasher are in space and builds a structured representation that a robot can use to plan a multi-step trajectory. This spatial map is constructed before execution, which helps the robot navigate around obstacles and reduces trial-and-error during action. The result is more reliable instruction following than simply reacting step by step without a global plan."
+  }
+]

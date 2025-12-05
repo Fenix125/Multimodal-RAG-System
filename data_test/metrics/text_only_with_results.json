@@ -1,0 +1,117 @@
+[
+  {
+    "query": "What do recent surveys say about public trust in AI, and why should the AI community care?",
+    "expected_relevant_article_ids": [
+      "why-people-dont-trust-ai-and-what-to-do-about-it"
+    ],
+    "retrieved_relevant_article_ids": [
+      "why-people-dont-trust-ai-and-what-to-do-about-it",
+      "openai-looks-inside-neural-networks"
+    ]
+  },
+  {
+    "query": "How is Google DeepMind using graph neural networks and reinforcement learning to coordinate multi-armed robots?",
+    "expected_relevant_article_ids": [
+      "google-deepminds-roboballet-research-project-blends-graph-neural-networks-with-reinforcement-learning-to-drive-8-armed-robots"
+    ],
+    "retrieved_relevant_article_ids": [
+      "google-deepminds-roboballet-research-project-blends-graph-neural-networks-with-reinforcement-learning-to-drive-8-armed-robots",
+      "molmoact-creates-spatial-maps-for-robots-to-plot-their-actions-before-executing-text-directions"
+    ]
+  },
+  {
+    "query": "What is Baidu's Ernie 5, and how does it perform on multimodal or vision-language benchmarks?",
+    "expected_relevant_article_ids": [
+      "ernie-5-is-huge-and-natively-generates-multiple-media-ernie-4-5-vl-28b-a3b-thinking-tops-vision-language-metrics"
+    ],
+    "retrieved_relevant_article_ids": [
+      "ernie-5-is-huge-and-natively-generates-multiple-media-ernie-4-5-vl-28b-a3b-thinking-tops-vision-language-metrics",
+      "alibaba-expands-qwen3-family-with-1-trillion-parameter-max-open-weights-qwen3-vl-and-qwen3-omni-voice-model",
+      "google-study-directly-measures-electricity-water-use-and-greenhouse-emissions-of-its-models",
+      "researchers-fine-tune-models-to-search-their-own-parameters-to-boost-recall"
+    ]
+  },
+  {
+    "query": "Give me examples of deals between major record labels and AI music companies.",
+    "expected_relevant_article_ids": [
+      "klay-image-emerges-from-relative-obscurity-to-announce-ai-music-deals-with-sony-warner-and-universal",
+      "universal-music-group-and-music-generator-udio-struck-a-deal-to-settle-a-lawsuit-and-build-a-new-platform-to-remix-copyrighted-music"
+    ],
+    "retrieved_relevant_article_ids": [
+      "universal-music-group-and-music-generator-udio-struck-a-deal-to-settle-a-lawsuit-and-build-a-new-platform-to-remix-copyrighted-music",
+      "klay-image-emerges-from-relative-obscurity-to-announce-ai-music-deals-with-sony-warner-and-universal"
+    ]
+  },
+  {
+    "query": "Which large language models are currently available across all three major cloud providers?",
+    "expected_relevant_article_ids": [
+      "anthropics-claude-becomes-the-first-leading-language-model-available-from-all-three-cloud-giants-google-amazon-and-microsoft"
+    ],
+    "retrieved_relevant_article_ids": [
+      "anthropics-claude-becomes-the-first-leading-language-model-available-from-all-three-cloud-giants-google-amazon-and-microsoft",
+      "meta-ai-now-recognizes-1600-languages",
+      "claudes-haiku-boasts-top-performance-fast",
+      "meta-model-detects-and-segments-video-objects"
+    ]
+  },
+  {
+    "query": "How are researchers making coding agents safer, and what are the concerns around automated cyberattacks?",
+    "expected_relevant_article_ids": [
+      "security-researchers-question-whether-coding-agents-allow-unprecedented-automated-attacks",
+      "openai-security-agent-finds-and-plugs-holes"
+    ],
+    "retrieved_relevant_article_ids": [
+      "security-researchers-question-whether-coding-agents-allow-unprecedented-automated-attacks",
+      "meta-model-detects-and-segments-video-objects"
+    ]
+  },
+  {
+    "query": "What are some recent open-weight language models that rival proprietary systems like GPT-5.1 or Gemini 3 Pro?",
+    "expected_relevant_article_ids": [
+      "deepseeks-latest-open-models-rival-gpt-5-1-and-gemini-3-pro",
+      "inside-olmo-3-a-new-family-of-fully-open-models",
+      "alibaba-expands-qwen3-family-with-1-trillion-parameter-max-open-weights-qwen3-vl-and-qwen3-omni-voice-model",
+      "minimax-m2s-lightweight-footprint-and-low-costs-belie-its-top-performance"
+    ],
+    "retrieved_relevant_article_ids": [
+      "claudes-haiku-boasts-top-performance-fast",
+      "google-researchers-released-vaultgemma-an-open-weights-model-redacting-personal-information",
+      "ernie-5-is-huge-and-natively-generates-multiple-media-ernie-4-5-vl-28b-a3b-thinking-tops-vision-language-metrics",
+      "meta-ai-now-recognizes-1600-languages"
+    ]
+  },
+  {
+    "query": "How is AI being used to optimize energy use in data centers, and what do we know about the energy footprint of large models?",
+    "expected_relevant_article_ids": [
+      "google-study-directly-measures-electricity-water-use-and-greenhouse-emissions-of-its-models",
+      "a-new-30-billion-4-5-gigawatt-ai-data-center-offshoot-of-the-stargate-project",
+      "the-international-energy-agency-examines-the-energy-costs-and-potential-savings-of-the-ai-boom"
+    ],
+    "retrieved_relevant_article_ids": [
+      "french-ai-startup-discloses-full-lifecycle-consumption-and-emissions-for-mistral-large-2",
+      "the-international-energy-agency-examines-the-energy-costs-and-potential-savings-of-the-ai-boom",
+      "researchers-confirm-reasoning-models-that-generate-more-tokens-have-a-bigger-environmental-footprint"
+    ]
+  },
+  {
+    "query": "What are some recent AI tools for professional music and sound design?",
+    "expected_relevant_article_ids": [
+      "google-upgrades-its-ai-music-tools-for-professional-use",
+      "generated-video-with-music-sound-effects-and-dialogue"
+    ],
+    "retrieved_relevant_article_ids": [
+      "generated-video-with-music-sound-effects-and-dialogue",
+      "universal-music-group-and-music-generator-udio-struck-a-deal-to-settle-a-lawsuit-and-build-a-new-platform-to-remix-copyrighted-music",
+      "google-upgrades-its-ai-music-tools-for-professional-use"
+    ]
+  },
+  {
+    "query": "How is AI being applied to language translation in consumer apps like Duolingo?",
+    "expected_relevant_article_ids": [
+      "duolingo-turns-to-ai-translation-to-expand-its-most-popular-courses-to-all-28-user-languages"
+    ],
+    "retrieved_relevant_article_ids": [
+      "duolingo-turns-to-ai-translation-to-expand-its-most-popular-courses-to-all-28-user-languages"
+    ]
+  }
+]

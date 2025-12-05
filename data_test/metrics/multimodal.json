@@ -1,0 +1,66 @@
+[
+  {
+    "query": "Do you have any visualizations that compare how people in different countries feel about AI's ability to tackle big problems like poverty or climate change?",
+    "expected_relevant_article_ids": [
+      "why-people-dont-trust-ai-and-what-to-do-about-it"
+    ]
+  },
+  {
+    "query": "Show me an overview of how AI-powered coding agents could be used in a cyberattack, ideally with a diagram of the stages involved.",
+    "expected_relevant_article_ids": [
+      "security-researchers-question-whether-coding-agents-allow-unprecedented-automated-attacks",
+      "openai-security-agent-finds-and-plugs-holes"
+    ]
+  },
+  {
+    "query": "Are there examples of generative models that can create editable 3D office or conference-room environments you can walk through?",
+    "expected_relevant_article_ids": [
+      "world-labs-makes-its-marble-generative-world-model-public-adds-chisel-editing-tool",
+      "generating-persistent-editable-3d-worlds"
+    ]
+  },
+  {
+    "query": "Can you show me any visuals of AI systems tracking hurricanes or cyclones and explain how they improve weather forecasts?",
+    "expected_relevant_article_ids": [
+      "deepseeks-latest-open-models-rival-gpt-5-1-and-gemini-3-pro",
+      "u-s-working-with-google-weather-lab-ai-to-improve-storm-forecasts"
+    ]
+  },
+  {
+    "query": "I want to see how self-driving cars are being tested on U.S. freeways; do you have any pictures of real robotaxis on highways and details of those deployments?",
+    "expected_relevant_article_ids": [
+      "waymo-deploys-autonomous-cars-on-california-and-arizona-expressways"
+    ]
+  },
+  {
+    "query": "Are there any articles about AI-powered beehives or robots that help monitor bee colonies, preferably with photos of the hives?",
+    "expected_relevant_article_ids": [
+      "beewises-robotic-beehive-uses-ai-to-save-pollinators"
+    ]
+  },
+  {
+    "query": "Can you share an article about Duolingo using AI translation to expand courses, ideally with a visual that shows the owl mascot representing different cultures?",
+    "expected_relevant_article_ids": [
+      "duolingo-turns-to-ai-translation-to-expand-its-most-popular-courses-to-all-28-user-languages"
+    ]
+  },
+  {
+    "query": "Is there coverage of the Hollywood actors' agreement on generative AI in film and TV, maybe with photos from the SAG-AFTRA picket lines?",
+    "expected_relevant_article_ids": [
+      "all-about-the-hollywood-actors-and-studios-deal-on-generative-ai-usage-in-films-and-tv"
+    ]
+  },
+  {
+    "query": "I'd like an explanation of the current AI investment boom and the risk of a bubble, with any illustrations that help show why the boom could eventually bust.",
+    "expected_relevant_article_ids": [
+      "understanding-the-ai-bubble-if-there-is-one",
+      "what-if-big-investments-in-ai-models-data-centers-and-hot-startups-dont-pay-off"
+    ]
+  },
+  {
+    "query": "Are there any examples of models that build spatial maps from text instructions like 'put the plate in the dishwasher' so a robot can plan its actions?",
+    "expected_relevant_article_ids": [
+      "molmoact-creates-spatial-maps-for-robots-to-plot-their-actions-before-executing-text-directions"
+    ]
+  }
+]

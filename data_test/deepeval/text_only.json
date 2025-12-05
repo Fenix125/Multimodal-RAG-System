@@ -1,0 +1,42 @@
+[
+  {
+    "query": "What do recent surveys say about public trust in AI, and why should the AI community care?",
+    "expected_answer": "Recent large-scale surveys show that people are cautiously curious about AI but don’t fully trust it. Many worry about bias, loss of jobs, privacy violations, misinformation, and a lack of transparency around how systems work and who is accountable when things go wrong. The AI community should care because distrust slows adoption, invites stricter regulation, and can undermine genuinely helpful applications; rebuilding trust requires clearer communication, better governance, and visible efforts to align AI systems with public values."
+  },
+  {
+    "query": "How is Google DeepMind using graph neural networks and reinforcement learning to coordinate multi-armed robots?",
+    "expected_answer": "Google DeepMind’s RoboBallet project treats each arm or joint of a multi-limbed robot as a node in a graph and applies graph neural networks to model how these nodes influence each other. A reinforcement learning policy then learns how to coordinate all arms jointly to perform complex motions, such as synchronized reaching and manipulating objects without collisions. This combination of GNNs and RL makes it easier to scale coordination to many limbs and to transfer skills across different robot configurations."
+  },
+  {
+    "query": "What is Baidu's Ernie 5, and how does it perform on multimodal or vision-language benchmarks?",
+    "expected_answer": "Ernie 5 is Baidu’s large multimodal model designed to natively handle and generate multiple media types, including text and images. In the same family, Baidu highlights a vision-language variant (such as Ernie-4.5-VL-28B-A3B-Thinking) that achieves top or near-top performance on many standard multimodal and vision-language benchmarks. These models are positioned as competitive with other frontier systems in tasks like image captioning, visual question answering, and document understanding."
+  },
+  {
+    "query": "Give me examples of deals between major record labels and AI music companies.",
+    "expected_answer": "Major labels are beginning to strike structured deals with AI music companies instead of only pursuing lawsuits. For example, an AI music startup reached agreements with Sony Music, Warner Music, and Universal Music to license catalogs and develop tools that let artists or users remix or generate music under controlled conditions. Another case is Universal Music Group settling litigation with a generator like Udio and collaborating on a new platform that allows AI-assisted remixing of copyrighted tracks with clear rules for attribution, revenue-sharing, and opt-outs."
+  },
+  {
+    "query": "Which large language models are currently available across all three major cloud providers?",
+    "expected_answer": "Anthropic’s Claude family is highlighted as the first leading large language model available across all three major cloud platforms: Amazon Web Services, Google Cloud, and Microsoft Azure. This means enterprises can access comparable Claude models through different cloud vendors, reducing lock-in and making it easier to standardize on one LLM while keeping infrastructure and deployment options flexible."
+  },
+  {
+    "query": "How are researchers making coding agents safer, and what are the concerns around automated cyberattacks?",
+    "expected_answer": "Security researchers warn that autonomous coding agents could chain together reconnaissance, vulnerability discovery, exploit development, and deployment, potentially enabling more scalable cyberattacks. At the same time, work is underway on defensive agents that automatically scan codebases, run tests, and suggest or apply security patches. Efforts to make these systems safer include sandboxing tools, strict permissioning and human-in-the-loop approvals, careful monitoring for abuse, and red-teaming. The main concern is that powerful agents could lower the skill and time required to launch sophisticated attacks, so safety and oversight are becoming central to their design."
+  },
+  {
+    "query": "What are some recent open-weight language models that rival proprietary systems like GPT-5.1 or Gemini 3 Pro?",
+    "expected_answer": "Several open-weight models are presented as competitive with top proprietary systems on many benchmarks. Examples include DeepSeek’s latest open models, which are shown to rival or closely track GPT-5.1 and Gemini 3 Pro on a range of reasoning and coding tests; the OLMo 3 family of fully open models; Alibaba’s expanded Qwen3 lineup, including large Max and vision/omni variants; and MiniMax’s M2S model, which offers strong coding performance with relatively modest compute and cost. While exact rankings vary by task, the overall picture is that open models are rapidly closing the performance gap, especially in math, code, and multilingual reasoning."
+  },
+  {
+    "query": "How is AI being used to optimize energy use in data centers, and what do we know about the energy footprint of large models?",
+    "expected_answer": "Recent studies from major cloud providers directly measure the electricity use, water consumption, and greenhouse gas emissions associated with training and running large models. The results show that AI workloads are a growing share of data center energy demand, though their impact varies by region and infrastructure. At the same time, AI is being applied to optimize cooling, scheduling, and workload placement in data centers, often yielding significant energy savings. Policy analyses, such as those by the International Energy Agency, stress that both efficiency gains and the sheer growth in AI demand must be considered when projecting the sector’s long-term climate impact."
+  },
+  {
+    "query": "What are some recent AI tools for professional music and sound design?",
+    "expected_answer": "Recent AI tools for professional creators include systems that can generate music tracks, stems, and sound effects from text or melody prompts, as well as tools that score video with synchronized audio. Some platforms focus on higher-quality outputs and tighter control for composers and sound designers, adding features like style conditioning, structure control, or editing within a DAW workflow. Others combine video and audio generation so that creators can prototype scenes with dialogue, ambience, and music in one place, then refine or replace the AI output as needed for final production."
+  },
+  {
+    "query": "How is AI being applied to language translation in consumer apps like Duolingo?",
+    "expected_answer": "Duolingo is using AI translation to scale its most popular language courses to many more source and target languages. Instead of writing every exercise manually, the company uses machine translation and AI-assisted authoring to generate initial lesson content, examples, and explanations, then filters and refines them with human oversight. This approach speeds up course creation while aiming to keep quality high, letting users access similar learning experiences regardless of their native language."
+  }
+]
