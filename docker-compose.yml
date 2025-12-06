@@ -1,0 +1,14 @@
+services:
+  app:
+    build:
+      context: .
+    entrypoint: ["/app/docker-entrypoint.sh"]
+    command: []
+    env_file: .env
+    ports:
+      - "${STREAMLIT_PORT:-8501}:${STREAMLIT_PORT:-8501}"
+    volumes:
+      - app-data:/app/data
+
+volumes:
+  app-data:
