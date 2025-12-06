@@ -69,7 +69,8 @@ The goal was to show how to build a practical, multimodal news search assistant 
 
 -   `GEMINI_API_KEY`=your_api_key_here
 
-[!NOTE] All articles and the Chroma db are stored locally under `CHROMA_PATH`
+> [!NOTE]
+> All articles and the Chroma db are stored locally under `CHROMA_PATH`
 
 Clone the Repository:
 
@@ -94,7 +95,8 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-[!IMPORTANT] Make sure GEMINI_API_KEY is set – without it the agent won't work
+> [!IMPORTANT]
+> Make sure GEMINI_API_KEY is set – without it the agent won't work
 
 ### Running the App:
 
@@ -147,9 +149,9 @@ docker compose start     # start them again
 docker compose down      # stop + remove containers
 ```
 
-[!NOTE]
-The app-data volume keeps your Chroma DB between restarts,
-so you don’t repeatedly re-download and re-embed everything.
+> [!NOTE]
+> The app-data volume keeps your Chroma DB between restarts,
+> so you don’t repeatedly re-download and re-embed everything.
 
 ## Evaluation (Optional)
 
