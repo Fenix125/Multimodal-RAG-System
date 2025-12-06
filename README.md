@@ -63,7 +63,7 @@ The goal was to show how to build a practical, multimodal news search assistant 
 -   `CHROMA_PATH`=data/chroma
 -   `DATA_DIR`=data
 -   `STREAMLIT_PORT`=8501
--   `OPENAI_API_KEY`=
+-   `OPENAI_API_KEY`=your_api_key_here
 
 #necessary
 
@@ -169,6 +169,9 @@ If you want to reproduce the evaluation:
     - Faithfulness
 
 Works on datasets in data_test/deepeval/
+
+> [!NOTE]
+> You will need to setup `OPENAI_API_KEY` to use DeepEval evaluation
 
 ```shell
 python -m src.scripts.evaluate_rag --help
